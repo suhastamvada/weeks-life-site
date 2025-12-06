@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Visualize your weeks of life in an interactive grid. All calculations happen in your browser.">
+  <title>Weeks of Life</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="page-header">
+    <div class="logo-mark" aria-hidden="true">∞</div>
+    <div>
+      <p class="eyebrow">Memento Mori</p>
+      <h1 class="site-title">Weeks of Life</h1>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="hero">
+      <div class="hero-copy">
+        <h2>See your life in weeks.</h2>
+        <p>Enter your birth date and a projected lifespan to visualize the weeks you've lived and the time ahead. Everything stays in your browser.</p>
+      </div>
+      <form id="life-form" class="card" aria-describedby="summary-text">
+        <div class="field">
+          <label for="birthdate">Birth date</label>
+          <input type="date" id="birthdate" name="birthdate" required>
+        </div>
+        <div class="field">
+          <label for="expectancy">Projected lifespan (years)</label>
+          <input type="number" id="expectancy" name="expectancy" min="1" max="120" value="90" required>
+        </div>
+        <div class="field">
+          <label for="enddate">Or provide a target end date (optional)</label>
+          <input type="date" id="enddate" name="enddate" aria-describedby="enddate-help">
+          <small id="enddate-help" class="help-text">If set, this overrides the projected lifespan.</small>
+        </div>
+        <button type="submit" class="primary">Generate my weeks</button>
+        <p class="privacy-note">No data leaves this page. Calculations happen locally.</p>
+      </form>
+    </section>
+
+    <section class="summary">
+      <div class="card">
+        <p id="summary-text" aria-live="polite" tabindex="-1">Enter your details to see the grid.</p>
+        <div id="stats-row" class="stats-row" aria-live="polite"></div>
+        <div class="legend" aria-label="Legend">
+          <span class="legend-swatch lived"></span><span>Lived</span>
+          <span class="legend-swatch current"></span><span>Current week</span>
+          <span class="legend-swatch remaining"></span><span>Remaining</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid-section">
+      <div id="weeks-grid" class="weeks-grid card placeholder" aria-live="polite" aria-label="Weeks grid"></div>
+    </section>
+
+    <section class="faq card">
+      <h3>What to expect</h3>
+      <ul>
+        <li>We color-code each week: lived, current, and remaining.</li>
+        <li>You can tweak life expectancy or set a specific end date.</li>
+        <li>All calculations stay local—no servers or storage.</li>
+        <li>Export and styling options will arrive in later iterations.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="page-footer">
+    <p>Built as a personal reflection tool. Inspired by the idea of memento mori.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
