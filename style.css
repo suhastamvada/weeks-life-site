@@ -1,17 +1,17 @@
 :root {
-  --bg: #0f172a;
-  --panel: #111827;
+  --bg: #000000;
+  --panel: #000;
   --muted: #94a3b8;
   --text: #e2e8f0;
   --accent: #f97316;
   --accent-2: #22d3ee;
-  --lived: rgba(148, 163, 184, 0.6);
-  --current: #22d3ee;
-  --remaining: rgba(249, 115, 22, 0.7);
-  --border: #1e293b;
+  --lived: rgba(173, 122, 104, 0.802);
+  --current: #08ecf8;
+  --remaining: rgba(69, 181, 54, 0.7);
+  --border: #2f2f2f;
   --radius: 14px;
-  --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
-  --font-body: 'Space Grotesk', 'SF Pro Display', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  --font-body: 'Inter', sans-serif;
   --cell-size: 13px;
   --cell-gap: 4px;
 }
@@ -19,9 +19,7 @@
 * { box-sizing: border-box; }
 body {
   margin: 0;
-  background: radial-gradient(circle at 20% 20%, rgba(34, 211, 238, 0.08), transparent 25%),
-              radial-gradient(circle at 80% 0%, rgba(249, 115, 22, 0.14), transparent 28%),
-              var(--bg);
+  background: #000;
   color: var(--text);
   font-family: var(--font-body);
   line-height: 1.6;
@@ -109,7 +107,7 @@ input, button {
 
 input[type="date"],
 input[type="number"] {
-  background: #0b1222;
+  background: #000;
   color: var(--text);
   border: 1px solid var(--border);
   border-radius: 10px;
@@ -122,10 +120,10 @@ input:focus {
 }
 
 button.primary {
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  color: #0b1020;
+  background: #000;
+  color: #fff;
   font-weight: 700;
-  border: none;
+  border: 1px solid #fff;
   border-radius: 12px;
   padding: 12px 14px;
   cursor: pointer;
@@ -133,10 +131,13 @@ button.primary {
   box-shadow: 0 14px 30px rgba(0,0,0,0.35);
 }
 
-button.primary:hover { transform: translateY(-1px); }
+button.primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.45);
+}
 button.primary:active { transform: translateY(0); }
 button.primary:focus-visible {
-  outline: 2px solid var(--accent-2);
+  outline: 2px solid #fff;
   outline-offset: 3px;
 }
 
@@ -187,7 +188,7 @@ button.primary:focus-visible {
 .weeks-grid {
   min-height: 320px;
   border: 1px dashed var(--border);
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 255, 255, 0.03);
   display: grid;
   gap: var(--cell-gap);
   justify-content: center;

@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
       cell.classList.add('week');
       if (idx === stats.currentIndex) {
         cell.classList.add('current');
-        cell.setAttribute('aria-label', `Current week (${idx + 1} of ${stats.total})`);
+        cell.setAttribute('aria-label', `This week (${idx + 1} of ${stats.total})`);
       } else if (idx < stats.lived) {
         cell.classList.add('lived');
       } else {
@@ -134,8 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
     statsRow.innerHTML = [
       `<span><strong>${numberFmt.format(stats.lived)}</strong> lived</span>`,
       `<span><strong>1</strong> current</span>`,
-      `<span><strong>${numberFmt.format(stats.remaining)}</strong> remaining</span>`,
-      `<span>${layout.cols} × ${layout.rows} grid</span>`
+      `<span><strong>${numberFmt.format(stats.remaining)}</strong> remaining</span>`
     ].join(' • ');
   };
 
