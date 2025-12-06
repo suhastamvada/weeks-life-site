@@ -177,8 +177,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       const stats = computeTimeline(birthDate, endDate, new Date());
-      const gap = parseFloat(getComputedStyle(grid).getPropertyValue('--cell-gap')) || 4;
-      const containerWidth = grid.clientWidth || document.documentElement.clientWidth || window.innerWidth || 0;
+      const styles = getComputedStyle(grid);
+      const gap = parseFloat(styles.getPropertyValue('--cell-gap')) || 4;
+      const paddingX = (parseFloat(styles.paddingLeft) || 0) + (parseFloat(styles.paddingRight) || 0);
+      const containerWidth = Math.max(0, (grid.clientWidth || grid.offsetWidth || 0) - paddingX) || document.documentElement.clientWidth || window.innerWidth || 0;
       const layout = chooseGrid(stats.total, containerWidth, gap);
       renderGrid(stats, layout);
       updateSummary(stats, layout, birthDate, endDate);
