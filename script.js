@@ -11,8 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const grid = document.getElementById('weeks-grid');
 
   const DAY_MS = 86_400_000;
-  const MIN_CELL_SIZE = 6;
-  const MAX_CELL_SIZE = 14;
+  const MIN_CELL_SIZE = 3;
+  const MAX_CELL_SIZE = 12;
   const numberFmt = new Intl.NumberFormat('en-US');
   const dateFmt = new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
 

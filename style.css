@@ -190,7 +190,7 @@ button.primary:focus-visible {
   background: rgba(255, 255, 255, 0.02);
   display: grid;
   gap: var(--cell-gap);
-  justify-content: start;
+  justify-content: center;
   align-content: start;
   padding: 14px;
 }
