@@ -5,7 +5,7 @@
   --text: #e2e8f0;
   --accent: #f97316;
   --accent-2: #22d3ee;
-   --lived: rgba(148, 163, 184, 0.6);
+  --lived: rgba(148, 163, 184, 0.6);
   --current: #22d3ee;
   --remaining: rgba(249, 115, 22, 0.7);
   --border: #1e293b;
@@ -232,6 +232,7 @@ button.primary:focus-visible {
 }
 
 @media (max-width: 640px) {
+  :root { --cell-gap: 3px; }
   body { padding: 20px; }
   .page-header { flex-direction: row; }
   .logo-mark { width: 40px; height: 40px; }

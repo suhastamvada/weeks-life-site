@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const grid = document.getElementById('weeks-grid');
 
   const DAY_MS = 86_400_000;
+  const MIN_CELL_SIZE = 6;
+  const MAX_CELL_SIZE = 14;
   const numberFmt = new Intl.NumberFormat('en-US');
   const dateFmt = new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
 
@@ -48,12 +50,27 @@ document.addEventListener('DOMContentLoaded', () => {
     return Math.max(1, Math.ceil(days / 7));
   };
 
-  const chooseGrid = (total) => {
-    if (total <= 0) return { cols: 1, rows: 1 };
+  const chooseGrid = (total, containerWidth = 0, gap = 4) => {
+    if (total <= 0) return { cols: 1, rows: 1, cellSize: MAX_CELL_SIZE };
     const ideal = Math.max(1, Math.floor(Math.sqrt(total)));
-    const cols = Math.max(1, ideal + Math.floor(ideal / 6)); // slight width bias
+    let cols = Math.max(1, ideal + Math.floor(ideal / 6)); // slight width bias
+
+    if (containerWidth > 0) {
+      const maxColsThatFit = Math.max(1, Math.floor((containerWidth + gap) / (MIN_CELL_SIZE + gap)));
+      cols = Math.min(cols, maxColsThatFit);
+    }
+
+    cols = Math.max(1, Math.min(total, cols));
     const rows = Math.ceil(total / cols);
-    return { cols, rows };
+
+    let cellSize = MAX_CELL_SIZE;
+    if (containerWidth > 0) {
+      const available = containerWidth - gap * (cols - 1);
+      cellSize = Math.floor(available / cols);
+      cellSize = Math.max(MIN_CELL_SIZE, Math.min(MAX_CELL_SIZE, cellSize));
+    }
+
+    return { cols, rows, cellSize };
   };
 
   const renderPlaceholder = (text) => {
@@ -85,6 +102,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const renderGrid = (stats, layout) => {
     if (!grid) return;
+    if (layout?.cellSize) {
+      grid.style.setProperty('--cell-size', `${layout.cellSize}px`);
+    }
     const fragment = document.createDocumentFragment();
 
     for (let idx = 0; idx < stats.total; idx += 1) {
@@ -157,7 +177,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       const stats = computeTimeline(birthDate, endDate, new Date());
-      const layout = chooseGrid(stats.total);
+      const gap = parseFloat(getComputedStyle(grid).getPropertyValue('--cell-gap')) || 4;
+      const containerWidth = grid.clientWidth || document.documentElement.clientWidth || window.innerWidth || 0;
+      const layout = chooseGrid(stats.total, containerWidth, gap);
       renderGrid(stats, layout);
       updateSummary(stats, layout, birthDate, endDate);
       if (announce) {
@@ -186,4 +208,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   renderVisualization({ announce: false, suppressErrors: true });
+
+  let resizeTimeout;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      renderVisualization({ announce: false, suppressErrors: true });
+    }, 120);
+  });
 });
