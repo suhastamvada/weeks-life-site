@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const MIN_CELL_SIZE = 4;
   const MAX_CELL_SIZE = 12;
   const numberFmt = new Intl.NumberFormat('en-US');
-  const dateFmt = new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+  const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   const parseDateInput = (value) => {
     if (!value) return null;
@@ -38,6 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
     clone.setUTCFullYear(clone.getUTCFullYear() + years);
     return clone;
   };
+
+  const formatDate = (date) => `${MONTH_NAMES[date.getUTCMonth()]} ${date.getUTCDate()}, ${date.getUTCFullYear()}`;
 
   const completedWeeks = (start, end) => {
     const days = Math.floor((end - start) / DAY_MS);
@@ -130,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const updateSummary = (stats, layout, birthDate, endDate) => {
     if (!summary || !statsRow) return;
-    summary.textContent = `${dateFmt.format(birthDate)} → ${dateFmt.format(endDate)} · ${numberFmt.format(stats.total)} total weeks.`;
+    summary.textContent = `${formatDate(birthDate)} → ${formatDate(endDate)} · ${numberFmt.format(stats.total)} total weeks.`;
     statsRow.innerHTML = [
       `<span><strong>${numberFmt.format(stats.lived)}</strong> lived</span>`,
       `<span><strong>1</strong> current</span>`,
