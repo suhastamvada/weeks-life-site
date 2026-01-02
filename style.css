@@ -8,6 +8,7 @@
   --lived: rgba(173, 122, 104, 0.802);
   --current: #08ecf8;
   --remaining: rgba(69, 181, 54, 0.7);
+  --sleep: rgba(59, 130, 246, 0.7);
   --border: #2f2f2f;
   --radius: 14px;
   --shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
@@ -172,6 +173,7 @@ button.primary:focus-visible {
 .legend-swatch.lived { background: var(--lived); }
 .legend-swatch.current { background: var(--current); }
 .legend-swatch.remaining { background: var(--remaining); }
+.legend-swatch.sleep { background: var(--sleep); }
 
 .stats-row {
   display: flex;
@@ -220,6 +222,7 @@ button.primary:focus-visible {
   background: var(--current);
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 8px 20px rgba(34, 211, 238, 0.32);
 }
+.week.sleep { background: var(--sleep); }
 
 .faq h3 { margin-top: 0; }
 .faq ul { margin: 0; padding-left: 18px; color: var(--muted); }

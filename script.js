@@ -6,11 +6,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const birthInput = document.getElementById('birthdate');
   const expectancyInput = document.getElementById('expectancy');
   const endInput = document.getElementById('enddate');
+  const sleepInput = document.getElementById('sleep-hours');
   const summary = document.getElementById('summary-text');
   const statsRow = document.getElementById('stats-row');
   const grid = document.getElementById('weeks-grid');
 
   const DAY_MS = 86_400_000;
+  const DEFAULT_SLEEP_HOURS = 8;
+  const HOURS_PER_DAY = 24;
   const MIN_CELL_SIZE = 4;
   const MAX_CELL_SIZE = 12;
   const numberFmt = new Intl.NumberFormat('en-US');
@@ -33,6 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const stripTime = (date) => new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
 
+  const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
   const addYears = (date, years) => {
     const clone = stripTime(date);
     clone.setUTCFullYear(clone.getUTCFullYear() + years);
@@ -51,6 +56,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const days = Math.max(0, Math.ceil((end - start) / DAY_MS));
     return Math.max(1, Math.ceil(days / 7));
   };
+
+  const formatHours = (value) => (Number.isInteger(value) ? `${value}` : value.toFixed(1).replace(/\.0$/, ''));
 
   const chooseGrid = (total, containerWidth = 0, gap = 4) => {
     if (total <= 0) return { cols: 1, rows: 1, cellSize: MAX_CELL_SIZE };
@@ -85,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
     grid.setAttribute('aria-label', 'Weeks grid placeholder');
   };
 
-  const computeTimeline = (birthDate, endDate, today = new Date()) => {
+  const computeTimeline = (birthDate, endDate, sleepHours, today = new Date()) => {
     const start = stripTime(birthDate);
     const finish = stripTime(endDate);
     const now = stripTime(today);
@@ -94,12 +101,31 @@ document.addEventListener('DOMContentLoaded', () => {
       throw new Error('End date must be after birth date.');
     }
 
+    const safeSleepHours = Number.isFinite(sleepHours)
+      ? clamp(sleepHours, 0, HOURS_PER_DAY)
+      : DEFAULT_SLEEP_HOURS;
     const total = totalWeeksSpan(start, finish);
     const lived = Math.min(total - 1, Math.max(0, completedWeeks(start, now)));
     const currentIndex = Math.min(total - 1, lived);
     const remaining = Math.max(0, total - lived - 1);
+    const remainingDays = Math.max(0, Math.ceil((finish - now) / DAY_MS));
+    const sleepDays = Math.max(0, Math.round(remainingDays * (safeSleepHours / HOURS_PER_DAY)));
+    const sleepWeeks = Math.min(remaining, Math.round(sleepDays / 7));
+    const sleepStartIndex = currentIndex + 1;
+    const sleepEndIndex = Math.min(total, sleepStartIndex + sleepWeeks);
 
-    return { total, lived, remaining, currentIndex };
+    return {
+      total,
+      lived,
+      remaining,
+      currentIndex,
+      remainingDays,
+      sleepDays,
+      sleepWeeks,
+      sleepHours: safeSleepHours,
+      sleepStartIndex,
+      sleepEndIndex
+    };
   };
 
   const renderGrid = (stats, layout) => {
@@ -112,11 +138,14 @@ document.addEventListener('DOMContentLoaded', () => {
     for (let idx = 0; idx < stats.total; idx += 1) {
       const cell = document.createElement('div');
       cell.classList.add('week');
+      const isSleep = stats.sleepWeeks > 0 && idx >= stats.sleepStartIndex && idx < stats.sleepEndIndex;
       if (idx === stats.currentIndex) {
         cell.classList.add('current');
         cell.setAttribute('aria-label', `This week (${idx + 1} of ${stats.total})`);
       } else if (idx < stats.lived) {
         cell.classList.add('lived');
+      } else if (isSleep) {
+        cell.classList.add('sleep');
       } else {
         cell.classList.add('remaining');
       }
@@ -136,7 +165,8 @@ document.addEventListener('DOMContentLoaded', () => {
     statsRow.innerHTML = [
       `<span><strong>${numberFmt.format(stats.lived)}</strong> lived</span>`,
       `<span><strong>1</strong> current</span>`,
-      `<span><strong>${numberFmt.format(stats.remaining)}</strong> remaining</span>`
+      `<span><strong>${numberFmt.format(stats.remaining)}</strong> remaining</span>`,
+      `<span><strong>${numberFmt.format(stats.sleepDays)}</strong> days asleep (${formatHours(stats.sleepHours)}h/day)</span>`
     ].join(' • ');
   };
 
@@ -146,6 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const birthVal = birthInput.value;
     const expectancyVal = expectancyInput.value;
     const endVal = endInput?.value;
+    const sleepVal = sleepInput?.value;
 
     if (!birthVal) {
       if (!suppressErrors) renderPlaceholder('Enter your birth date to see the grid.');
@@ -176,8 +207,13 @@ document.addEventListener('DOMContentLoaded', () => {
       endDate = addYears(birthDate, expectancyYears);
     }
 
+    let sleepHours = parseFloat(sleepVal || '');
+    if (Number.isNaN(sleepHours)) {
+      sleepHours = DEFAULT_SLEEP_HOURS;
+    }
+
     try {
-      const stats = computeTimeline(birthDate, endDate, new Date());
+      const stats = computeTimeline(birthDate, endDate, sleepHours, new Date());
       const styles = getComputedStyle(grid);
       const gap = parseFloat(styles.getPropertyValue('--cell-gap')) || 4;
       const paddingX = (parseFloat(styles.paddingLeft) || 0) + (parseFloat(styles.paddingRight) || 0);
