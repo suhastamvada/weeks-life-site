@@ -1,5 +1,7 @@
 # Memento Mori
 
+> **This project has moved.** It now lives at [tamvada.me/mementomori](https://tamvada.me/mementomori/), served from the [suhastamvada.github.io](https://github.com/suhastamvada/suhastamvada.github.io) repo. This repo only hosts a redirect page.
+
 > Memento mori (Latin): Remember Death
 
 It is important to remember death, the only inevitability in one's life. 
@@ -15,25 +17,5 @@ The philosophical merit will be the constant reminder of one's mortality and the
 
 The commercial merit is that many people are beginning to engage in philosophical discussions lately. Philosophy has always been an active subject of discussion and will continue to do so. In addition, although abstract philosophical thought experiments are fun and engaging, most people tend to latch onto a physical artifact or symbol as a constant reminder of their philosophical convictions.
 
-## Static site structure
-- `index.html`: Single-page UI with form inputs and grid placeholder for the weeks visualization.
-- `style.css`: Base theme, layout, and legend styling.
-- `script.js`: Client-side logic (runs fully in-browser; renders the grid live as you edit inputs).
-- `CNAME`: Custom domain binding (`suhastamvada.com`) for GitHub Pages.
-
-## Local development (plain static)
-- Open `index.html` directly, or serve locally: `python -m http.server 8000` then visit `http://localhost:8000`.
-- For auto-refresh while designing, you can use `npx live-server .` (optional; no build step required).
-- Calculations run entirely client-side; visitors never trigger redeploys.
-
-## Deploying to GitHub Pages
-1. Push this repo to GitHub.
-2. Settings → Pages: Source `main`, folder `/ (root)`.
-3. Keep the `CNAME` file so Pages serves `suhastamvada.com`.
-4. DNS: add A records for `suhastamvada.com` to `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`. Optional: `www` CNAME to `<username>.github.io`.
-5. Enforce HTTPS in Pages settings after DNS propagates.
-
-## Next steps
-- Tune the visual design (colors, spacing, typography) now that the grid renders live.
-- Add export/sharing options (PNG download) and refine copy.
-- Add lightweight tests for date math if desired (still fully client-side).
+## Repo contents
+- `index.html`: Redirect page pointing to [tamvada.me/mementomori](https://tamvada.me/mementomori/). The app itself is maintained in the main site repo under `/mementomori/`.
